@@ -10,7 +10,7 @@ namespace Domain
     public partial class UserDetail
     {
         
-        public Guid Id { get; set; }
+        public Guid UserDetailId { get; set; }
         public Guid UserId { get; set; }
         public string UniqueId { get; set; }
         public UserStatus Status { get; set; }

@@ -11,6 +11,7 @@ namespace Persistence
         {
 
             entity.ToTable( "UserRole" );
+            entity.HasKey( e=>e.UserRoleId);
             //entity.ToTable( "CustomAPIModel" );
             entity.Property( e => e.UserRoleId )
                       .HasColumnName( "UserRoleID" )

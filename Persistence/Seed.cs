@@ -10,7 +10,7 @@ namespace Persistence
     {
           public static async Task SeedData(DataContext context)
         {
-            if (context.Client.Any() || context.PMPAUser.Any() || context.ClientProject.Any() || context.ClientService.Any()) return;
+            if (context.Clients.Any() || context.PMPAUsers.Any() || context.ClientProjects.Any() || context.ClientServices.Any()) return;
             
             var client = new Client(){ClientId = Guid.NewGuid(), ClientName = "ACME", ClientCode = "ACME" };
 
@@ -129,10 +129,10 @@ namespace Persistence
 //             };
 
             //await context.Activities.AddRangeAsync(activities);
-            await context.Client.AddAsync(client);
-            await context.PMPAUser.AddAsync(user);
-            await context.ClientService.AddAsync(clientService);
-            await context.ClientProject.AddRangeAsync(clientProjects);
+            await context.Clients.AddAsync(client);
+            await context.PMPAUsers.AddAsync(user);
+            await context.ClientServices.AddAsync(clientService);
+            await context.ClientProjects.AddRangeAsync(clientProjects);
             await context.SaveChangesAsync();
         }
     }

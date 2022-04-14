@@ -9,6 +9,10 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<GlobalFilter> entity )
         {
+
+  entity.ToTable( "GlobalFilter" );
+  entity.HasKey( e=>e.GlobalFilterId);
+
             entity.Property( e => e.GlobalFilterId )
                     .HasColumnName( "GlobalFilterID" )
                     .ValueGeneratedNever();

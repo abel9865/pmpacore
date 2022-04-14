@@ -9,6 +9,8 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<ClientProject> entity )
         {
+  entity.ToTable( "ClientProject" );
+
             entity.HasKey( e => e.ProjectId );
 
             entity.Property( e => e.ProjectId )

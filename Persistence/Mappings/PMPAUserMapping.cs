@@ -9,6 +9,10 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<User> entity )
         {
+
+  entity.ToTable( "PMPAUser" );
+  entity.HasKey( e=>e.UserId);
+
             entity.Property( e => e.UserId )
                    .HasColumnName( "UserID" )
                    .ValueGeneratedNever();

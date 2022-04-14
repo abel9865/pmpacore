@@ -9,6 +9,9 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<Profile> entity )
         {
+  entity.ToTable( "Profile" );
+  entity.HasKey( e=>e.ProfileId);
+
             entity.Property( e => e.ProfileId ).HasColumnName( "ProfileID" );
 
             entity.Property( e => e.ConnectionId ).HasColumnName( "ConnectionID" );

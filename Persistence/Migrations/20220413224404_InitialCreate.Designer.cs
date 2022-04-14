@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220413224404_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,6 +42,9 @@ namespace Persistence.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.HasKey("ClientId");
+
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("ClientID");
 
                     b.ToTable("Client");
                 });
@@ -906,7 +911,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.UserDetail", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("UserDetailId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("Id");
 
@@ -938,7 +943,7 @@ namespace Persistence.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("UserID");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserDetailId");
 
                     b.HasIndex("UserId");
 

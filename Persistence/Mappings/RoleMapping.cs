@@ -11,7 +11,7 @@ namespace Persistence
         {
 
             entity.ToTable( "Role" );
-
+entity.HasKey( e=>e.RoleId);
             entity.Property( e => e.RoleId )
                     .HasColumnName( "RoleID" )
                     .ValueGeneratedNever();

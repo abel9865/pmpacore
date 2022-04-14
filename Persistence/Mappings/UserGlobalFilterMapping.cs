@@ -9,6 +9,8 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<UserGlobalFilter> entity )
         {
+              entity.ToTable( "UserGlobalFilter" );
+entity.HasKey( e=>e.UserGlobalFilterId);
             entity.Property( e => e.UserGlobalFilterId )
                     .HasColumnName( "UserGlobalFilterID" )
                     .ValueGeneratedNever();

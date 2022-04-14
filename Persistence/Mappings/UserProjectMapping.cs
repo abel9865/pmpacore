@@ -9,6 +9,9 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<UserProject> entity )
         {
+  entity.ToTable( "UserProject" );
+  entity.HasKey( e=>e.UserProjectId);
+
             entity.Property( e => e.UserProjectId )
                   .HasColumnName( "UserProjectID" )
                   .ValueGeneratedNever();

@@ -9,6 +9,9 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<ClientService> entity )
         {
+  entity.ToTable( "ClientService" );
+
+entity.HasKey( e=>e.ClientServiceId);
             entity.Property( e => e.ClientServiceId )
                    .HasColumnName( "ClientServiceID" )
                    .ValueGeneratedNever();

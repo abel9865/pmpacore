@@ -17,19 +17,19 @@ namespace Persistence
         {
             Database.EnsureCreated();
         }
-         public virtual DbSet<Client> Client{ get; set; }
-        public virtual DbSet<ClientProject> ClientProject { get; set; }
-        public virtual DbSet<ClientService> ClientService { get; set; }
+         public virtual DbSet<Client> Clients{ get; set; }
+        public virtual DbSet<ClientProject> ClientProjects { get; set; }
+        public virtual DbSet<ClientService> ClientServices { get; set; }
         //public virtual DbSet<GlobalFilter> GlobalFilter { get; set; }
-        public virtual DbSet<User> PMPAUser { get; set; }
+        public virtual DbSet<User> PMPAUsers { get; set; }
 
-         public virtual DbSet<GlobalFilter> GlobalFilter { get; set; }
-        public virtual DbSet<UserGlobalFilter> UserGlobalFilter { get; set; }
-        public virtual DbSet<UserProject> UserProject{ get; set; }
-        public virtual DbSet<UserDetail> UserDetail { get; set; }
-        public virtual DbSet<Role> Role{ get; set; }
+         public virtual DbSet<GlobalFilter> GlobalFilters { get; set; }
+        public virtual DbSet<UserGlobalFilter> UserGlobalFilters { get; set; }
+        public virtual DbSet<UserProject> UserProjects{ get; set; }
+        public virtual DbSet<UserDetail> UserDetails { get; set; }
+        public virtual DbSet<Role> Roles{ get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
-        public virtual DbSet<UserProfile> UserProfile { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
 
           protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
                {

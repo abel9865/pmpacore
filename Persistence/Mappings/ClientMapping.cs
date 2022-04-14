@@ -15,7 +15,9 @@ namespace Persistence
     {
         public void Configure( EntityTypeBuilder<Client> entity )
         {
+ entity.ToTable( "Client" );
 
+ entity.HasKey( e=>e.ClientId);
 
             entity.Property( e => e.ClientId )
                   .HasColumnName( "ClientID" )
@@ -32,24 +34,24 @@ namespace Persistence
             entity.Property( e => e.Comments ).HasMaxLength( 1000 );
 
 
-            //entity.ToTable( "PMPA_Client" );
+           
 
-            //entity.HasIndex( e => e.ClientId )
-            //      .HasDatabaseName( "ClientID" );
+            entity.HasIndex( e => e.ClientId )
+                 .HasDatabaseName( "ClientID" );
 
-            //entity.Property( e => e.ClientId )
-            //       .HasColumnName( "ClientID" )
-            //       .ValueGeneratedNever();
+            entity.Property( e => e.ClientId )
+                  .HasColumnName( "ClientID" )
+                  .ValueGeneratedNever();
 
-            //entity.Property( e => e.ClientCode )
-            //    .IsRequired()
-            //    .HasMaxLength( 10 );
+            entity.Property( e => e.ClientCode )
+               .IsRequired()
+               .HasMaxLength( 10 );
 
-            //entity.Property( e => e.ClientName )
-            //    .IsRequired()
-            //    .HasMaxLength( 100 );
+            entity.Property( e => e.ClientName )
+               .IsRequired()
+               .HasMaxLength( 100 );
 
-            //entity.Property( e => e.Comments ).HasMaxLength( 1000 );
+            entity.Property( e => e.Comments ).HasMaxLength( 1000 );
 
 
 

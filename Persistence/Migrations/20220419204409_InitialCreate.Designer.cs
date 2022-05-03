@@ -10,7 +10,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220413224404_InitialCreate")]
+    [Migration("20220419204409_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,11 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("datetime");
+
+                    b.Property<string>("ProjectDescription")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool>("ProjectStatus")
                         .HasColumnType("bit");

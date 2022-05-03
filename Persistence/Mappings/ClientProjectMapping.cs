@@ -27,6 +27,10 @@ namespace Persistence
                 .IsRequired()
                 .HasMaxLength( 200 );
 
+                entity.Property( e => e.ProjectDescription )
+                .IsRequired()
+                .HasMaxLength( 2000 );
+
             entity.HasOne( d => d.Client )
                 .WithMany( p => p.ClientProjects )
                 .HasForeignKey( d => d.ClientId )

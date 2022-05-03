@@ -28,9 +28,9 @@ namespace Persistence
             var clientService = new ClientService(){ClientServiceId = Guid.NewGuid(), ClientId = client.ClientId, Pm = true, Pa = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now};
 
             var clientProjects = new List<ClientProject>{
-                new ClientProject{ProjectId = Guid.NewGuid(), ClientId = client.ClientId, ProjectTitle = "HR Employee Management", ProjectStatus = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now},
-                new ClientProject{ProjectId = Guid.NewGuid(), ClientId = client.ClientId, ProjectTitle = "ACME CRM", ProjectStatus = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now},
-                new ClientProject{ProjectId = Guid.NewGuid(), ClientId = client.ClientId, ProjectTitle = "Support Desk", ProjectStatus = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now}
+                new ClientProject{ProjectId = Guid.NewGuid(), ClientId = client.ClientId, ProjectTitle = "HR Employee Management", ProjectDescription="This application is used to managed everything HR related at ACME INC", ProjectStatus = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now},
+                new ClientProject{ProjectId = Guid.NewGuid(), ClientId = client.ClientId, ProjectTitle = "ACME CRM", ProjectDescription="This application is used to managed everything CRM related at ACME INC", ProjectStatus = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now},
+                new ClientProject{ProjectId = Guid.NewGuid(), ClientId = client.ClientId, ProjectTitle = "Support Desk", ProjectDescription="This application is used to managed everything Support Desk related at ACME INC" , ProjectStatus = true, CreatedBy = user.UserId, CreatedDate = DateTime.Now, LastUpdatedBy = user.UserId, LastUpdatedDate = DateTime.Now}
 
             };
             

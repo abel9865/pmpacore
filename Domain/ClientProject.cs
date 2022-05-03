@@ -16,6 +16,7 @@ namespace Domain
         public Guid ProjectId { get; set; }
         public Guid ClientId { get; set; }
         public string ProjectTitle { get; set; }
+        public string ProjectDescription{get; set;}
         public bool ProjectStatus { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

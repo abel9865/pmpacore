@@ -19,6 +19,8 @@ using Persistence;
 using API.Extensions;
 using FluentValidation.AspNetCore;
 using API.MiddleWare;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API
 {
@@ -35,12 +37,19 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddFluentValidation(Configuration =>
+            services.AddControllers(opt=>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+
+            })
+            .AddFluentValidation(Configuration =>
             {
                 Configuration.RegisterValidatorsFromAssemblyContaining<Create>();
             });
 
             services.AddApplicationServices(Configuration);
+            services.AddIdentityServices(Configuration);
 
         }
 
@@ -56,11 +65,14 @@ namespace API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
             app.UseCors("CorsPolicy");
 
+            //order is important here - authentication must happen before authorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

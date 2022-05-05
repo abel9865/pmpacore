@@ -5,11 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.ClientProjects;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
 
+[AllowAnonymous]
     public class ClientProjectController : BaseApiController
     {
 
@@ -18,6 +20,7 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new List.Query(), ct));
         }
+
         [HttpGet("GetClientProjectsByClientId/{id}")]
         public async Task<IActionResult> GetClientProjectsByClientId(Guid id)
         {

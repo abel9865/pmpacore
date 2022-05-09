@@ -25,7 +25,8 @@ namespace Domain
          public DateTime? CreateDateTime { get; set; }
         public DateTime? LastUpdateDateTime { get; set; }
         
-        public Guid CreatedBy { get; set; }
+
+        public Guid? CreatedBy { get; set; }
         public Guid? LastUpdatedBy { get; set; }
        
         public string Country { get; set; }

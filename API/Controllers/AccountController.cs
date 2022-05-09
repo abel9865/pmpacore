@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using API.Helpers;
 using API.Services;
 using Domain;
 using DTOs;
@@ -56,7 +57,7 @@ namespace API.Controllers
 
                 // };
 
-                 return CreateUserObject(user);
+                return CreateUserObject(user);
             }
 
             return Unauthorized();
@@ -67,24 +68,27 @@ namespace API.Controllers
         {
             if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
             {
-                return BadRequest("Email taken");
+                ModelState.AddModelError("email", "email taken");
+                return ValidationProblem();
             }
 
             var user = new AppUser
             {
                 UserId = Guid.NewGuid(),
                 ClientId = registerDto.ClientId,
-                FirstName = registerDto.FirtName,
+                FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,
                 Email = registerDto.Email,
+                UserName = registerDto.Email,
                 Address1 = registerDto.Address,
                 City = registerDto.City,
                 State = registerDto.State,
                 Zip = registerDto.ZipCode,
                 Country = registerDto.Country,
+                Phone  = registerDto.PhoneNumber,
                 SysTimeZone = registerDto.SysTimeZone,
                 SysTimeOffset = registerDto.SysTimeOffset,
-                CreatedBy = registerDto.AdminUserId,
+                CreatedBy = registerDto.ClientSideChangeBy,
                 CreateDateTime = DateTime.UtcNow
             };
 
@@ -93,33 +97,86 @@ namespace API.Controllers
             {
                 return new UserDto
                 {
+                    UserId = user.UserId,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email
                 };
             }
-            return BadRequest("Problem adding user");
+            var flattenErrors = UtilHelpers.FlattenErrors( result.Errors, " - ");
+            ModelState.AddModelError("addUser", $"Problem adding user :  {flattenErrors} ");
+            return ValidationProblem();
 
         }
 
         [HttpGet]
-        public async Task<ActionResult<UserDto>> GetCurrentUser(){
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
             return CreateUserObject(user);
 
         }
 
-        private UserDto CreateUserObject(AppUser user){
-             return new UserDto
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    ClientId = user.ClientId.Value,
-                    Token = _tokenService.CreateToken(user),
-                    Image = null
 
-                };
+        [HttpGet("GetAllUsers")]
+        public async Task<ActionResult<List<RegisterDto>>> GetAllActiveUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return CreateRegisterObject(users);
+        }
+
+        private UserDto CreateUserObject(AppUser user)
+        {
+            return new UserDto
+            {
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                ClientId = user.ClientId.Value,
+                Token = _tokenService.CreateToken(user),
+                Image = null
+
+            };
+        }
+
+        private List<RegisterDto> CreateRegisterObject(List<AppUser> users)
+        {
+
+            var result = new List<RegisterDto>();
+            foreach (var user in users)
+            {
+                result.Add(
+                    new RegisterDto
+                    {
+
+
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Email = user.Email,
+PhoneNumber = user.Phone,
+                        Address = user.Address1,
+                        City = user.City,
+                        State = user.State,
+                        ZipCode = user.Zip,
+                        Country = user.Country,
+                        IsAdmin = user.IsAdmin,
+
+                        Active = user.Active,
+                        ProfileImage = user.ProfileImage,
+                        ProfilePath = user.ProfilePath,
+                        SysTimeZone = user.SysTimeZone,
+                        SysTimeOffset = user.SysTimeOffset,
+
+                        UserId = user.UserId,
+                        ClientId = user.ClientId.Value
+
+                    }
+                );
+            }
+
+
+            return result;
         }
     }
 }

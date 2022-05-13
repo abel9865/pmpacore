@@ -85,11 +85,12 @@ namespace API.Controllers
                 State = registerDto.State,
                 Zip = registerDto.ZipCode,
                 Country = registerDto.Country,
-                Phone  = registerDto.PhoneNumber,
+                Phone = registerDto.PhoneNumber,
                 SysTimeZone = registerDto.SysTimeZone,
                 SysTimeOffset = registerDto.SysTimeOffset,
                 CreatedBy = registerDto.ClientSideChangeBy,
-                CreateDateTime = DateTime.UtcNow
+                CreateDateTime = DateTime.UtcNow,
+
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -103,9 +104,34 @@ namespace API.Controllers
                     Email = user.Email
                 };
             }
-            var flattenErrors = UtilHelpers.FlattenErrors( result.Errors, " - ");
+            var flattenErrors = UtilHelpers.FlattenErrors(result.Errors, " - ");
             ModelState.AddModelError("addUser", $"Problem adding user :  {flattenErrors} ");
             return ValidationProblem();
+
+        }
+
+        [HttpPut("EditUser/{id}")]
+        public async Task<ActionResult<bool>> EditUser(Guid id, RegisterDto registerDto)
+        {
+            var user = await _userManager.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                UpdateUserObject(ref user, registerDto);
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return true;
+                }
+                var flattenErrors = UtilHelpers.FlattenErrors(result.Errors, " - ");
+                ModelState.AddModelError("updateUser", $"Problem updating user :  {flattenErrors} ");
+                return ValidationProblem();
+            }
+            else
+            {
+                ModelState.AddModelError("userUpdate", "cannot update user account");
+                return ValidationProblem();
+            }
+
 
         }
 
@@ -123,6 +149,34 @@ namespace API.Controllers
         {
             var users = await _userManager.Users.ToListAsync();
             return CreateRegisterObject(users);
+        }
+
+        [HttpGet("GetRegisteredUser/{id}")]
+        public async Task<ActionResult<RegisterDto>> GetRegisteredUser(Guid id)
+        {
+            var user = await _userManager.Users.Where(x => x.UserId == id).ToListAsync();
+            return CreateRegisterObject(user).First();
+        }
+
+
+        private void UpdateUserObject(ref AppUser user, RegisterDto registerDto)
+        {
+            user.Active = registerDto.Active;
+            user.Address1 = registerDto.Address;
+            user.City = registerDto.City;
+            user.Country = registerDto.Country;
+            user.Email = registerDto.Email;
+            user.FirstName = registerDto.FirstName;
+            user.LastName = registerDto.LastName;
+            user.IsAdmin = registerDto.IsAdmin!=null? registerDto.IsAdmin.Value: false;
+            user.LastUpdateDateTime = DateTime.UtcNow;
+            user.LastUpdatedBy = registerDto.ClientSideChangeBy;
+            user.Phone = registerDto.PhoneNumber;
+            user.ProfileImage = registerDto.ProfileImage;
+            user.ProfilePath = registerDto.ProfilePath;
+            user.SysTimeZone = registerDto.SysTimeZone;
+            user.SysTimeOffset = registerDto.SysTimeOffset;
+
         }
 
         private UserDto CreateUserObject(AppUser user)
@@ -154,7 +208,7 @@ namespace API.Controllers
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Email = user.Email,
-PhoneNumber = user.Phone,
+                        PhoneNumber = user.Phone,
                         Address = user.Address1,
                         City = user.City,
                         State = user.State,

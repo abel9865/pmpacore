@@ -63,10 +63,12 @@ namespace API.Controllers
             return Unauthorized();
         }
 
+
+
         [HttpPost("AddUser")]
-        public async Task<ActionResult<UserDto>> AddUser(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> AddUser(RegisteredUserDto registeredUserDto)
         {
-            if (await _userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
+            if (await _userManager.Users.AnyAsync(x => x.Email == registeredUserDto.Email))
             {
                 ModelState.AddModelError("email", "email taken");
                 return ValidationProblem();
@@ -74,31 +76,31 @@ namespace API.Controllers
 
             var user = new AppUser
             {
-                UserId = Guid.NewGuid(),
-                ClientId = registerDto.ClientId,
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                Email = registerDto.Email,
-                UserName = registerDto.Email,
-                Address1 = registerDto.Address,
-                City = registerDto.City,
-                State = registerDto.State,
-                Zip = registerDto.ZipCode,
-                Country = registerDto.Country,
-                Phone = registerDto.PhoneNumber,
-                SysTimeZone = registerDto.SysTimeZone,
-                SysTimeOffset = registerDto.SysTimeOffset,
-                CreatedBy = registerDto.ClientSideChangeBy,
+                Id = Guid.NewGuid().ToString(),
+                ClientId = registeredUserDto.ClientId,
+                FirstName = registeredUserDto.FirstName,
+                LastName = registeredUserDto.LastName,
+                Email = registeredUserDto.Email,
+                UserName = registeredUserDto.Email,
+                Address1 = registeredUserDto.Address,
+                City = registeredUserDto.City,
+                State = registeredUserDto.State,
+                Zip = registeredUserDto.ZipCode,
+                Country = registeredUserDto.Country,
+                Phone = registeredUserDto.PhoneNumber,
+                SysTimeZone = registeredUserDto.SysTimeZone,
+                SysTimeOffset = registeredUserDto.SysTimeOffset,
+                CreatedBy = registeredUserDto.ClientSideChangeBy,
                 CreateDateTime = DateTime.UtcNow,
 
             };
 
-            var result = await _userManager.CreateAsync(user, registerDto.Password);
+            var result = await _userManager.CreateAsync(user, registeredUserDto.Password);
             if (result.Succeeded)
             {
                 return new UserDto
                 {
-                    UserId = user.UserId,
+                    UserId = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email
@@ -111,12 +113,12 @@ namespace API.Controllers
         }
 
         [HttpPut("EditUser/{id}")]
-        public async Task<ActionResult<bool>> EditUser(Guid id, RegisterDto registerDto)
+        public async Task<ActionResult<bool>> EditUser(string id, RegisteredUserDto registeredUserDto)
         {
-            var user = await _userManager.Users.Where(x => x.UserId == id).FirstOrDefaultAsync();
+            var user = await _userManager.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (user != null)
             {
-                UpdateUserObject(ref user, registerDto);
+                UpdateUserObject(ref user, registeredUserDto);
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -144,22 +146,38 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("GetAllUsers")]
-        public async Task<ActionResult<List<RegisterDto>>> GetAllActiveUsers()
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> DeleteUser(string id)
         {
-            var users = await _userManager.Users.ToListAsync();
+            var opResult = false;
+
+            var user = await _userManager.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                opResult = true;
+            }
+            return opResult;
+            //HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+        [HttpGet("GetAllUsers")]
+        public async Task<ActionResult<List<RegisteredUserDto>>> GetAllActiveUsers()
+        {
+            var users = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ToListAsync();
+
             return CreateRegisterObject(users);
         }
 
         [HttpGet("GetRegisteredUser/{id}")]
-        public async Task<ActionResult<RegisterDto>> GetRegisteredUser(Guid id)
+        public async Task<ActionResult<RegisteredUserDto>> GetRegisteredUser(string id)
         {
-            var user = await _userManager.Users.Where(x => x.UserId == id).ToListAsync();
+            var user = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.Id == id).ToListAsync();
             return CreateRegisterObject(user).First();
         }
 
 
-        private void UpdateUserObject(ref AppUser user, RegisterDto registerDto)
+        private void UpdateUserObject(ref AppUser user, RegisteredUserDto registerDto)
         {
             user.Active = registerDto.Active;
             user.Address1 = registerDto.Address;
@@ -168,7 +186,7 @@ namespace API.Controllers
             user.Email = registerDto.Email;
             user.FirstName = registerDto.FirstName;
             user.LastName = registerDto.LastName;
-            user.IsAdmin = registerDto.IsAdmin!=null? registerDto.IsAdmin.Value: false;
+            user.IsAdmin = registerDto.IsAdmin != null ? registerDto.IsAdmin.Value : false;
             user.LastUpdateDateTime = DateTime.UtcNow;
             user.LastUpdatedBy = registerDto.ClientSideChangeBy;
             user.Phone = registerDto.PhoneNumber;
@@ -183,7 +201,7 @@ namespace API.Controllers
         {
             return new UserDto
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -194,14 +212,14 @@ namespace API.Controllers
             };
         }
 
-        private List<RegisterDto> CreateRegisterObject(List<AppUser> users)
+        private List<RegisteredUserDto> CreateRegisterObject(List<AppUser> users)
         {
 
-            var result = new List<RegisterDto>();
+            var result = new List<RegisteredUserDto>();
             foreach (var user in users)
             {
                 result.Add(
-                    new RegisterDto
+                    new RegisteredUserDto
                     {
 
 
@@ -222,8 +240,11 @@ namespace API.Controllers
                         SysTimeZone = user.SysTimeZone,
                         SysTimeOffset = user.SysTimeOffset,
 
-                        UserId = user.UserId,
-                        ClientId = user.ClientId.Value
+                        UserId = user.Id,
+                        ClientId = user.ClientId.Value,
+                        Roles = CreateRoleDtoObject(user.UserRoles)
+
+
 
                     }
                 );
@@ -231,6 +252,28 @@ namespace API.Controllers
 
 
             return result;
+        }
+
+        private List<RoleDto> CreateRoleDtoObject(ICollection<UserRole> userRoles)
+        {
+
+            var roleDtos = new List<RoleDto>();
+            foreach (var userRole in userRoles)
+            {
+                roleDtos.Add(new RoleDto
+                {
+                    RoleId = userRole.RoleId,
+                    RoleName = userRole.Role.RoleName,
+                    Active = userRole.Role.Active,
+                    ProjectId = userRole.Role.ProjectId,
+                    CreatedBy = userRole.Role.CreatedBy,
+                    CreatedDate = userRole.Role.CreatedDate,
+                    LastUpdatedBy = userRole.Role.LastUpdatedBy,
+                    LastUpdatedDate = userRole.Role.LastUpdatedDate
+                });
+            }
+
+            return roleDtos;
         }
     }
 }

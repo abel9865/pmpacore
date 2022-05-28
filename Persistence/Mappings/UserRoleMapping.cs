@@ -11,11 +11,11 @@ namespace Persistence
         {
 
             entity.ToTable( "UserRole" );
-            entity.HasKey( e=>e.UserRoleId);
-            //entity.ToTable( "CustomAPIModel" );
-            entity.Property( e => e.UserRoleId )
-                      .HasColumnName( "UserRoleID" )
-                      .ValueGeneratedNever();
+            entity.HasKey( e=>new {e.UserId, e.RoleId});
+           
+            // entity.Property( e => e.UserRoleId )
+            //           .HasColumnName( "UserRoleID" )
+            //           .ValueGeneratedNever();
 
             entity.Property( e => e.Comments ).HasMaxLength( 1000 );
 
@@ -27,17 +27,25 @@ namespace Persistence
 
             entity.Property( e => e.UserId ).HasColumnName( "UserID" );
 
-            entity.HasOne( d => d.Role )
-                .WithMany( p => p.UserRoles )
-                .HasForeignKey( d => d.RoleId )
-                .OnDelete( DeleteBehavior.ClientSetNull )
-                .HasConstraintName( "FK_UserRole_Role" );
+            // entity.HasOne( d => d.Role )
+            //     .WithMany( p => p.UserRoles )
+            //     .HasForeignKey( d => d.RoleId )
+            //     .OnDelete( DeleteBehavior.ClientSetNull )
+            //     .HasConstraintName( "FK_UserRole_Role" );
 
-            entity.HasOne( d => d.User )
-             .WithMany( p => p.UserRoles )
-             .HasForeignKey( d => d.UserId )
-             .OnDelete( DeleteBehavior.ClientSetNull )
-             .HasConstraintName( "FK_UserRole_User" );
+            // entity.HasOne( d => d.User )
+            //  .WithMany( p => p.UserRoles )
+            //  .HasForeignKey( d => d.UserId )
+            //  .OnDelete( DeleteBehavior.ClientSetNull )
+            //  .HasConstraintName( "FK_UserRole_User" );
+
+            entity.HasOne(x=>x.User)
+            .WithMany(a=>a.UserRoles)
+            .HasForeignKey(aa=>aa.UserId);
+
+            entity.HasOne(x=>x.Role)
+            .WithMany(a=>a.UserRoles)
+            .HasForeignKey(aa=>aa.RoleId);
         }
     }
 }

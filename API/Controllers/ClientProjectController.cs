@@ -5,13 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.ClientProjects;
 using Domain;
+using DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
 
-[AllowAnonymous]
+
     public class ClientProjectController : BaseApiController
     {
 
@@ -24,15 +25,16 @@ namespace API.Controllers
         [HttpGet("GetClientProjectsByClientId/{id}")]
         public async Task<IActionResult> GetClientProjectsByClientId(Guid id)
         {
-            var result = await Mediator.Send(new Details.Query { Id = id });
+            var result = await Mediator.Send(new Details.Query { Id = id , SearchBy = SearchByEnums.ByKey});
              return HandleResult(result);
         }
 
         [HttpGet("GetClientProjectByProjectId/{id}")]
         public async Task<IActionResult> GetClientProjectByProjectId(Guid id)
         {
-            var result = await Mediator.Send(new Details.Query { Id = id });
-          return HandleResult(result);
+            var val = await Mediator.Send(new Details.Query { Id = id, SearchBy = SearchByEnums.ByProjectId });
+         var result = val.Value.FirstOrDefault();
+          return HandleResult(Result<ClientProject>.Success(result));
 
         }
 

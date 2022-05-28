@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs
 {
-    public class RegisterDto
+    public class RegisteredUserDto
     {
         [Required]
         public string FirstName{get;set;}
@@ -14,7 +14,7 @@ namespace DTOs
         public string LastName{get;set;}
         [Required]
         public string Email{get;set;}
-        [Required]
+        //[Required]
         //[RegularExpression("(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8-12}$", ErrorMessage ="Password must meet the rules")]
         public string Password{get;set;}
         public string Address{get;set;}
@@ -32,9 +32,11 @@ namespace DTOs
         public string SysTimeOffset { get; set; }
 
         
-       public Guid ClientSideChangeBy {get;set;}
-        public Guid? UserId {get;set;}
+       public string ClientSideChangeBy {get;set;}
+        public string UserId {get;set;}
 
         public Guid ClientId{get;set;}
+
+        public ICollection<RoleDto> Roles{get;set;} = new List<RoleDto>();
     }
 }

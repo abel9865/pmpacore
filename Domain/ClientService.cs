@@ -13,10 +13,10 @@ namespace Domain
         public Guid ClientId { get; set; }
         public bool Pm { get; set; }
         public bool Pa { get; set; }
-        public Guid CreatedBy { get; set; }
+        public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
-        public Guid LastUpdatedBy { get; set; }
-        public DateTime LastUpdatedDate { get; set; }
+        public string LastUpdatedBy { get; set; }
+        public DateTime? LastUpdatedDate { get; set; }
         public string Comment { get; set; }
 
         public virtual Client Client { get; set; }

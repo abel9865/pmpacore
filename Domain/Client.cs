@@ -23,6 +23,6 @@ namespace Domain
         public virtual ICollection<ClientProject> ClientProjects { get; set; }
         public virtual ICollection<ClientService> ClientServices { get; set; }
 
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<AppUser> Users { get; set; }
     }
 }

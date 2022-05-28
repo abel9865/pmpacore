@@ -14,10 +14,10 @@ namespace Application.ClientProjects
             RuleFor(x => x.ProjectTitle).NotEmpty();
             RuleFor(x => x.ClientId).NotEmpty();
             RuleFor(x => x.ProjectDescription).NotEmpty();
-            RuleFor(x => x.CreatedDate).NotEmpty();
-            RuleFor(x => x.CreatedBy).NotEmpty();
-            RuleFor(x => x.LastUpdatedDate).NotEmpty();
-            RuleFor(x => x.LastUpdatedBy).NotEmpty();
+            // RuleFor(x => x.CreatedDate).NotEmpty();
+            // RuleFor(x => x.CreatedBy).NotEmpty();
+            // RuleFor(x => x.LastUpdatedDate).NotEmpty();
+            // RuleFor(x => x.LastUpdatedBy).NotEmpty();
             
         }
     }

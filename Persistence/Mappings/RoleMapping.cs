@@ -18,7 +18,7 @@ entity.HasKey( e=>e.RoleId);
 
             entity.Property( e => e.CreatedDate ).HasColumnType( "datetime" );
 
-            entity.Property( e => e.DefaultObjectId ).HasColumnName( "DefaultObjectID" );
+          
 
             entity.Property( e => e.LastUpdatedDate ).HasColumnType( "datetime" );
 
@@ -33,6 +33,11 @@ entity.HasKey( e=>e.RoleId);
                 .HasForeignKey( d => d.ProjectId )
                 .OnDelete( DeleteBehavior.ClientSetNull )
                 .HasConstraintName( "FK_Role_ClientProject" );
+
+
+            //      entity.HasMany(x=>x.UserRoles)
+            // .WithOne()
+            // .HasForeignKey(e=>e.RoleId);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
@@ -11,7 +12,13 @@ namespace Domain
     public partial class AppUser:IdentityUser
     {
 
-         public Guid UserId { get; set; }
+ public AppUser()
+        {
+            
+            UserRoles = new HashSet<UserRole>();
+        }
+       
+        // public Guid UserId { get; set; }
      
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -26,8 +33,8 @@ namespace Domain
         public DateTime? LastUpdateDateTime { get; set; }
         
 
-        public Guid? CreatedBy { get; set; }
-        public Guid? LastUpdatedBy { get; set; }
+        public string CreatedBy { get; set; }
+        public string LastUpdatedBy { get; set; }
        
         public string Country { get; set; }
            public bool IsAdmin { get; set; }
@@ -38,7 +45,7 @@ namespace Domain
         public string SysTimeOffset { get; set; }
         public Guid? ClientId { get; set; }
         
-
+ public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
        
     }
 }

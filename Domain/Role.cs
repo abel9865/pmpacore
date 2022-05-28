@@ -15,17 +15,16 @@ namespace Domain
 
         public Guid RoleId { get; set; }
         public string RoleName { get; set; }
-        public bool IsSystemRole { get; set; }
-        public Guid CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public Guid LastUpdatedBy { get; set; }
-        public DateTime LastUpdatedDate { get; set; }
-        public int DefaultObjectId { get; set; }
-        public short DefaultObjectType { get; set; }
+        public bool Active { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public string LastUpdatedBy { get; set; }
+        public DateTime? LastUpdatedDate { get; set; }
+        
         public Guid ProjectId { get; set; }
 
-        public virtual ClientProject Project { get; set; }
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public virtual ClientProject Project { get; set; } //= new ClientProject();
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
 
         //public virtual User CreateUser { get; set; }

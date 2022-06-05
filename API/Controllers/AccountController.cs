@@ -9,6 +9,7 @@ using API.Services;
 using Domain;
 using DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +65,121 @@ namespace API.Controllers
         }
 
 
+        [AllowAnonymous]
+        [HttpPost("ResetPassword")]
+           public async Task<ActionResult<bool>> SendResetLink(PasswordRequestDto requestObj)
+           {
+               if (string.IsNullOrEmpty(requestObj.Email))
+                {
+                    return BadRequest("Invalid email.");
+                }
+
+            return await RequestPasswordReset(requestObj.Email, requestObj.Url);
+
+            //return Ok();
+            //return true;
+            }
+
+
+          private async Task<bool> RequestPasswordReset(string email, string url)
+           {
+               var user = await _userManager.FindByEmailAsync(email);
+
+                if (user!=null)
+               {
+                return await RequestPasswordResetLink(user, url);
+                   
+                }
+            return false;
+
+                //logger.LogWarning("Reset password requested for an account that did not exist.");
+            }
+
+          private async Task<bool> RequestPasswordResetLink(AppUser user, string url)
+         {
+
+            try
+            {
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+
+
+                var sendMailStatus = await EmailSender.SendEmailAsync(user, code, url);
+
+                if (sendMailStatus)
+                {
+                    //create a userReset record and store reset token , createdDate
+                }
+
+                return sendMailStatus;
+
+                //logger.LogInformation($"An password reset email was sent to {user.Email}");
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
+          }
+
+
+
+
+
+
+
+
+
+
+
+        //[HttpPost("ResetPassword")]
+
+        //public async Task<IActionResult> ResetPassword([FromBody] ChangePasswordViewModel model)
+        //{
+        //    var result = await ResetPassword(model);
+
+        //    if (!result)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while resetting your password. Please try again later."
+
+
+        //            );
+        //    }
+
+        //    return Ok();
+        //}
+
+        //public async Task<bool> ResetPassword(ChangePasswordViewModel model)
+        //{
+        //    var user = await _userManager.FindByEmailAsync(model.Email);
+
+        //    if (!user.IsEmpty())
+        //    {
+        //        var result = await _userManager.ResetPasswordAsync(user, model.ResetPasswordToken.FromBase64(), model.Password);
+
+        //        if (result.Succeeded)
+        //        {
+        //            var emailContent = $"Your password is reset now";
+
+        //            await emailSender.SendEmailAsync(user.Email, "Password Reset Complete", emailContent);
+
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost("AddUser")]
         public async Task<ActionResult<UserDto>> AddUser(RegisteredUserDto registeredUserDto)
@@ -88,8 +204,8 @@ namespace API.Controllers
                 Zip = registeredUserDto.ZipCode,
                 Country = registeredUserDto.Country,
                 Phone = registeredUserDto.PhoneNumber,
-                SysTimeZone = registeredUserDto.SysTimeZone,
-                SysTimeOffset = registeredUserDto.SysTimeOffset,
+               // SysTimeZone = registeredUserDto.SysTimeZone,
+               // SysTimeOffset = registeredUserDto.SysTimeOffset,
                 CreatedBy = registeredUserDto.ClientSideChangeBy,
                 CreateDateTime = DateTime.UtcNow,
 
@@ -98,6 +214,8 @@ namespace API.Controllers
             var result = await _userManager.CreateAsync(user, registeredUserDto.Password);
             if (result.Succeeded)
             {
+                //send a command to create the user photo
+
                 return new UserDto
                 {
                     UserId = user.Id,
@@ -122,6 +240,8 @@ namespace API.Controllers
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
+                    //send a command to update user photo
+
                     return true;
                 }
                 var flattenErrors = UtilHelpers.FlattenErrors(result.Errors, " - ");
@@ -158,13 +278,15 @@ namespace API.Controllers
                 var result = await _userManager.DeleteAsync(user);
                 opResult = true;
             }
+            //send a command to delete the user photo
+
             return opResult;
             //HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
         }
         [HttpGet("GetAllUsers")]
         public async Task<ActionResult<List<RegisteredUserDto>>> GetAllActiveUsers()
         {
-            var users = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ToListAsync();
+            var users = await _userManager.Users.Include(x=>x.UserPhoto).Include(x => x.UserRoles).ThenInclude(x => x.Role).ToListAsync();
 
             return CreateRegisterObject(users);
         }
@@ -172,7 +294,7 @@ namespace API.Controllers
         [HttpGet("GetRegisteredUser/{id}")]
         public async Task<ActionResult<RegisteredUserDto>> GetRegisteredUser(string id)
         {
-            var user = await _userManager.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.Id == id).ToListAsync();
+            var user = await _userManager.Users.Include(x => x.UserPhoto).Include(x => x.UserRoles).ThenInclude(x => x.Role).Where(x => x.Id == id).ToListAsync();
             return CreateRegisterObject(user).First();
         }
 
@@ -190,10 +312,10 @@ namespace API.Controllers
             user.LastUpdateDateTime = DateTime.UtcNow;
             user.LastUpdatedBy = registerDto.ClientSideChangeBy;
             user.Phone = registerDto.PhoneNumber;
-            user.ProfileImage = registerDto.ProfileImage;
-            user.ProfilePath = registerDto.ProfilePath;
-            user.SysTimeZone = registerDto.SysTimeZone;
-            user.SysTimeOffset = registerDto.SysTimeOffset;
+            //user.ProfileImage = registerDto.ProfileImage;
+            //user.ProfilePath = registerDto.ProfilePath;
+            //user.SysTimeZone = registerDto.SysTimeZone;
+            //user.SysTimeOffset = registerDto.SysTimeOffset;
 
         }
 
@@ -235,10 +357,10 @@ namespace API.Controllers
                         IsAdmin = user.IsAdmin,
 
                         Active = user.Active,
-                        ProfileImage = user.ProfileImage,
-                        ProfilePath = user.ProfilePath,
-                        SysTimeZone = user.SysTimeZone,
-                        SysTimeOffset = user.SysTimeOffset,
+                        ImageId = user.UserPhoto?.Id,
+                        ImagePath = user.UserPhoto?.Url,
+                        //SysTimeZone = user.SysTimeZone,
+                        //SysTimeOffset = user.SysTimeOffset,
 
                         UserId = user.Id,
                         ClientId = user.ClientId.Value,

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220528201838_PhotoEntityAdded")]
+    partial class PhotoEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,51 +279,6 @@ namespace Persistence.Migrations
                     b.ToTable("ClientService");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Body")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ResourceId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("authorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResourceId");
-
-                    b.HasIndex("authorId");
-
-                    b.ToTable("Comments");
-                });
-
-            modelBuilder.Entity("Domain.Resource", b =>
-                {
-                    b.Property<Guid>("ResourceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ResourceLinkId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("ResourceType")
-                        .HasColumnType("int");
-
-                    b.HasKey("ResourceId");
-
-                    b.ToTable("Resource");
-                });
-
             modelBuilder.Entity("Domain.Role", b =>
                 {
                     b.Property<Guid>("RoleId")
@@ -567,22 +524,6 @@ namespace Persistence.Migrations
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
-                {
-                    b.HasOne("Domain.Resource", "Resource")
-                        .WithMany("Comments")
-                        .HasForeignKey("ResourceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Domain.AppUser", "author")
-                        .WithMany()
-                        .HasForeignKey("authorId");
-
-                    b.Navigation("author");
-
-                    b.Navigation("Resource");
-                });
-
             modelBuilder.Entity("Domain.Role", b =>
                 {
                     b.HasOne("Domain.ClientProject", "Project")
@@ -683,11 +624,6 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.ClientProject", b =>
                 {
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("Domain.Resource", b =>
-                {
-                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Domain.Role", b =>

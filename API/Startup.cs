@@ -21,6 +21,7 @@ using FluentValidation.AspNetCore;
 using API.MiddleWare;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using API.SignalR;
 
 namespace API
 {
@@ -50,7 +51,7 @@ namespace API
 
             services.AddApplicationServices(Configuration);
             services.AddIdentityServices(Configuration);
-
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +79,10 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
+
+            Bold.Licensing.BoldLicenseProvider.RegisterLicense("HVd+9UzdkZg8IR+GtCsV7RLWM5VL9G64XxbnvWkpiUY=");
         }
     }
 }

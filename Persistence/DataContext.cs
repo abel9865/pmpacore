@@ -29,8 +29,16 @@ namespace Persistence
 // public virtual DbSet<AppUser> AppUsers{ get; set; }
         public virtual DbSet<Role> AppRoles{ get; set; }
         public virtual DbSet<UserRole> AppUserRoles { get; set; }
-       
-          protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
+
+
+        public virtual DbSet<AppUserPhoto> AppUserPhotos { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+
+        public virtual DbSet<Resource> Resources { get; set; }
+
+
+
+        protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
                {
                    if ( !optionsBuilder.IsConfigured )
                    {
@@ -64,8 +72,11 @@ namespace Persistence
             modelBuilder.ApplyConfiguration( new RoleMapping() );
 
             modelBuilder.ApplyConfiguration( new UserRoleMapping() );
-          
-         
+
+            modelBuilder.Entity<Comment>()
+                   .HasOne(r => r.Resource)
+                   .WithMany(c => c.Comments)
+                   .OnDelete(DeleteBehavior.Cascade);
 
         }
 

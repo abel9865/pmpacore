@@ -5,6 +5,14 @@ namespace Domain
 namespace PMPA.Model
 {
 
+
+        public enum ResourceType
+        {
+            report=1,
+            dashboard=2,
+            form=3,
+            workflow=4
+        }
     public enum BannerType
     {
         Select = 0,

@@ -12,6 +12,14 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Photos\" />
+    <None Remove="Comments\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Photos\" />
+    <Folder Include="Comments\" />
+  </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>

@@ -44,7 +44,9 @@ namespace Domain
         public string SysTimeZone { get; set; }
         public string SysTimeOffset { get; set; }
         public Guid? ClientId { get; set; }
-        
+
+        public AppUserPhoto UserPhoto { get; set; }
+
  public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
        
     }

@@ -10,6 +10,8 @@ namespace Application.Core
         {
             CreateMap<ClientProject, ClientProject>();
             CreateMap<Role, Role>();
+            //Tell autoMapper to map PhotoDto from AppUserPhoto
+            CreateMap<AppUserPhoto, PhotoDto>();
             //Tell autoMapper to map RoleDto from Role and alo map RegisterUsers property from the UserRoles property
             CreateMap<Role, RoleDto>()
             .ForMember(x=>x.ClientId, u=>u.MapFrom(s=>s.Project.ClientId))
@@ -29,11 +31,16 @@ namespace Application.Core
                                 .ForMember(x => x.Email, u => u.MapFrom(s => s.User.Email))
                                   .ForMember(x => x.IsAdmin, u => u.MapFrom(s => s.User.IsAdmin))
 
-                                      .ForMember(x => x.ProfileImage, u => u.MapFrom(s => s.User.ProfileImage))
-                                        .ForMember(x => x.ProfilePath, u => u.MapFrom(s => s.User.ProfilePath))
-                                          .ForMember(x => x.SysTimeOffset, u => u.MapFrom(s => s.User.SysTimeOffset))
-                                            .ForMember(x => x.SysTimeZone, u => u.MapFrom(s => s.User.SysTimeZone))
+                                      .ForMember(x => x.ImageId, u => u.MapFrom(s => s.User.UserPhoto.Id))
+                                        .ForMember(x => x.ImagePath, u => u.MapFrom(s => s.User.UserPhoto.Url))
+                                         // .ForMember(x => x.SysTimeOffset, u => u.MapFrom(s => s.User.SysTimeOffset))
+                                         //   .ForMember(x => x.SysTimeZone, u => u.MapFrom(s => s.User.SysTimeZone))
                                               .ForMember(x => x.UserId, u => u.MapFrom(s => s.User.Id));
+            //Tell outoMapper how to map CommentDto from Comment
+            CreateMap<Comment, CommentDto>()
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.author.FirstName + " " + s.author.LastName))
+                .ForMember(d => d.UserEmail, o => o.MapFrom(s => s.author.Email))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.author.UserPhoto.Url));
 
         }
     }

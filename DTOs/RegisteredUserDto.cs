@@ -26,10 +26,13 @@ namespace DTOs
         public bool? IsAdmin{get;set;}
 
         public bool Active { get; set; }
-        public byte[] ProfileImage { get; set; }
-        public string ProfilePath { get; set; }
-        public string SysTimeZone { get; set; }
-        public string SysTimeOffset { get; set; }
+
+        public string ImagePath { get; set; }
+        public string ImageId { get; set; }
+        //public byte[] ProfileImage { get; set; }
+        //public string ProfilePath { get; set; }
+        //public string SysTimeZone { get; set; }
+        //public string SysTimeOffset { get; set; }
 
         
        public string ClientSideChangeBy {get;set;}

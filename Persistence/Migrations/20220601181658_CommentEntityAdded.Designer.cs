@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220601181658_CommentEntityAdded")]
+    partial class CommentEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -305,7 +307,7 @@ namespace Persistence.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Domain.Resource", b =>
+            modelBuilder.Entity("Domain.Resources", b =>
                 {
                     b.Property<Guid>("ResourceId")
                         .ValueGeneratedOnAdd()
@@ -319,7 +321,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("ResourceId");
 
-                    b.ToTable("Resource");
+                    b.ToTable("Resources");
                 });
 
             modelBuilder.Entity("Domain.Role", b =>
@@ -569,7 +571,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.HasOne("Domain.Resource", "Resource")
+                    b.HasOne("Domain.Resources", "Resources")
                         .WithMany("Comments")
                         .HasForeignKey("ResourceId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -580,7 +582,7 @@ namespace Persistence.Migrations
 
                     b.Navigation("author");
 
-                    b.Navigation("Resource");
+                    b.Navigation("Resources");
                 });
 
             modelBuilder.Entity("Domain.Role", b =>
@@ -685,7 +687,7 @@ namespace Persistence.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("Domain.Resource", b =>
+            modelBuilder.Entity("Domain.Resources", b =>
                 {
                     b.Navigation("Comments");
                 });

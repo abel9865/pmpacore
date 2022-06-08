@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using API.Helpers;
 using API.Services;
+using Application.Roles.UserRoles;
 using Domain;
 using DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +20,8 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseApiController
+    //ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
@@ -237,8 +239,22 @@ namespace API.Controllers
             if (user != null)
             {
                 UpdateUserObject(ref user, registeredUserDto);
+
+                //update user
                 var result = await _userManager.UpdateAsync(user);
-                if (result.Succeeded)
+
+               
+                //delete roles
+                var deleteResult = await Mediator.Send(new DeleteAllUserRolesByUserId.Command { UserId = registeredUserDto.UserId });
+
+
+
+                //create role
+                var roles = CreateRoleObject(registeredUserDto.Roles);
+                var createResult = await Mediator.Send(new Create.Command { UserId = registeredUserDto.UserId, Roles = roles });
+                
+
+                if (result.Succeeded && createResult.IsSuccess)
                 {
                     //send a command to update user photo
 
@@ -396,6 +412,30 @@ namespace API.Controllers
             }
 
             return roleDtos;
+        }
+
+        private List<Role> CreateRoleObject(ICollection<RoleDto> roleDtos)
+        {
+            var roles = new List<Role>();
+            foreach (var roleDto in roleDtos)
+            {
+                roles.Add(new Role
+                {
+
+                     RoleId = roleDto.RoleId,
+       RoleName = roleDto.RoleName,
+        Active = roleDto.Active,
+        CreatedBy =roleDto.CreatedBy,
+         CreatedDate =roleDto.CreatedDate,
+        LastUpdatedBy =roleDto.LastUpdatedBy,
+       LastUpdatedDate = roleDto.LastUpdatedDate,
+
+        ProjectId=roleDto.ProjectId
+
+                });
+            }
+
+            return roles;
         }
     }
 }

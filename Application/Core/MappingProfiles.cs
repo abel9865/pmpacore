@@ -14,8 +14,8 @@ namespace Application.Core
             CreateMap<AppUserPhoto, PhotoDto>();
             //Tell autoMapper to map RoleDto from Role and alo map RegisterUsers property from the UserRoles property
             CreateMap<Role, RoleDto>()
-            .ForMember(x=>x.ClientId, u=>u.MapFrom(s=>s.Project.ClientId))
-            .ForMember(x => x.RegisteredUsers, u => u.MapFrom(s => s.UserRoles));
+            .ForMember(x => x.ClientId, u => u.MapFrom(s => s.Project.ClientId));
+            //.ForMember(x => x.RegisteredUsers, u => u.MapFrom(s => s.UserRoles));
             //Tell outoMapper how to map RegisterUserDto from UserRole
             CreateMap<UserRole, RegisteredUserDto>()
             .ForMember(x => x.FirstName, u => u.MapFrom(s => s.User.FirstName))

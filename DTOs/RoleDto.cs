@@ -18,7 +18,8 @@ namespace DTOs
         public Guid ClientId { get; set; }
         public Guid ProjectId { get; set; }
 
-        public ICollection<RegisteredUserDto> RegisteredUsers { get; set; } = new List<RegisteredUserDto>();
+        //public ICollection<RegisteredUserDto> RegisteredUsers { get; set; } = new List<RegisteredUserDto>();
+
         // public ICollection<RoleResource> RoleResources { get; set; }
     }
 }

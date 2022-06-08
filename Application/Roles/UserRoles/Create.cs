@@ -51,10 +51,17 @@ var userRoles = new List<UserRole>();
 foreach (var role in request.Roles){
 
    userRoles.Add(new UserRole{
-       
-        User = user,
-        Role = role,
-        CreatedBy = userInContext.Id,
+
+       // User = user,
+       //Role = role,
+            RoleId = role.RoleId,
+             UserId = user.Id,
+            Status=true,
+
+             LastUpdatedBy = userInContext.Id,
+           LastUpdatedDate = DateTime.UtcNow,
+           
+            CreatedBy = userInContext.Id,
         CreatedDate = DateTime.UtcNow
     });
 }

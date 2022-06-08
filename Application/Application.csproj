@@ -15,10 +15,12 @@
   <ItemGroup>
     <None Remove="Photos\" />
     <None Remove="Comments\" />
+    <None Remove="Errors\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Photos\" />
     <Folder Include="Comments\" />
+    <Folder Include="Errors\" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>

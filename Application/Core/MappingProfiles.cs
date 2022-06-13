@@ -41,7 +41,7 @@ namespace Application.Core
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.author.FirstName + " " + s.author.LastName))
                 .ForMember(d => d.UserEmail, o => o.MapFrom(s => s.author.Email))
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.author.UserPhoto.Url));
-
+            CreateMap<Domain.UserAcctRecoveryDetail, Domain.UserAcctRecoveryDetail>();
         }
     }
 }

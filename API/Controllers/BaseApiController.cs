@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Core;
+using Application.Interfaces;
 using DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,8 +16,11 @@ namespace API.Controllers
     public class BaseApiController : ControllerBase
     {
         private IMediator _mediator;
+        private IUserAccessor _userAccessor;
 
         protected IMediator Mediator => _mediator??=HttpContext.RequestServices.GetService<IMediator>();
+        protected IUserAccessor UserAccessor => _userAccessor ??= HttpContext.RequestServices.GetService<IUserAccessor>();
+
 
         protected ActionResult HandleResult<T>(Result<T> result)
         {

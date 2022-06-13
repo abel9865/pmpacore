@@ -319,7 +319,7 @@ namespace Persistence.Migrations
 
                     b.HasKey("ResourceId");
 
-                    b.ToTable("Resource");
+                    b.ToTable("Resources");
                 });
 
             modelBuilder.Entity("Domain.Role", b =>
@@ -357,6 +357,40 @@ namespace Persistence.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("Domain.UserAcctRecoveryDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("NewPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecoveryToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RequestCompleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequestCreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserAcctRecoveryDetails");
                 });
 
             modelBuilder.Entity("Domain.UserRole", b =>
@@ -594,6 +628,15 @@ namespace Persistence.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("Domain.UserAcctRecoveryDetail", b =>
+                {
+                    b.HasOne("Domain.AppUser", "User")
+                        .WithMany("UserAcctRecoveryDetails")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.UserRole", b =>
                 {
                     b.HasOne("Domain.Role", "Role")
@@ -666,6 +709,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
+                    b.Navigation("UserAcctRecoveryDetails");
+
                     b.Navigation("UserPhoto");
 
                     b.Navigation("UserRoles");

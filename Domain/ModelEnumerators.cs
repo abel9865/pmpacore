@@ -379,7 +379,7 @@ namespace PMPA.Model
         ComboChart = 14,
     }
 
-    public enum UserStatus
+    public enum UserAcctRecoveryStatus
     {
 
         Initiated = 1,

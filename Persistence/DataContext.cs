@@ -36,7 +36,7 @@ namespace Persistence
 
         public virtual DbSet<Resource> Resources { get; set; }
 
-
+        public virtual DbSet<UserAcctRecoveryDetail> UserAcctRecoveryDetails { get; set; }
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )
                {

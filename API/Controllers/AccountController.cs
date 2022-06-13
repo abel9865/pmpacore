@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web;
 using API.Helpers;
 using API.Services;
 using Application.Roles.UserRoles;
 using Domain;
+using Domain.PMPA.Model;
 using DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -109,12 +111,27 @@ namespace API.Controllers
 
                 var sendMailStatus = await EmailSender.SendEmailAsync(user, code, url);
 
+
+                var acctRecoveryDetailOpResult = false;
+
                 if (sendMailStatus)
                 {
                     //create a userReset record and store reset token , createdDate
+                    var userAcctRecoveryDetail = new UserAcctRecoveryDetail
+                    {
+                        Id = Guid.NewGuid(),
+                        RecoveryToken = HttpUtility.UrlEncode(code),
+                        UserId = user.Id,
+                        Status = UserAcctRecoveryStatus.Initiated,
+                        RequestCreateDate = DateTime.UtcNow,
+                        OldPassword = user.PasswordHash
+
+                    };
+
+                    acctRecoveryDetailOpResult =   (await Mediator.Send(new Application.UserAcctRecoveryDetail.Create.Command { UserAcctRecoveryDetail = userAcctRecoveryDetail })).IsSuccess;
                 }
 
-                return sendMailStatus;
+                return sendMailStatus && acctRecoveryDetailOpResult;
 
                 //logger.LogInformation($"An password reset email was sent to {user.Email}");
             }
@@ -127,8 +144,28 @@ namespace API.Controllers
 
 
 
+        [AllowAnonymous]
+        [HttpPost("ChangePassword")]
+public async Task<IActionResult> ChangePassword(UserAcctRecoveryDetail requestObj)
+        {
+            var token = requestObj.RecoveryToken;
+            var userAcctRecoveryDetail = await Mediator.Send(new Application.UserAcctRecoveryDetail.Details.Query { Token = token });
+            if (!userAcctRecoveryDetail.IsSuccess) return NotFound("Invalid request");
 
+            var user = await _signInManager.UserManager.FindByIdAsync(userAcctRecoveryDetail.Value.UserId);
+            if(user==null) return NotFound("Invalid request");
 
+            var opResult = await _signInManager.UserManager.ResetPasswordAsync(user, token, requestObj.NewPassword);
+            if (opResult.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return StatusCode(409, opResult.Errors);
+            }
+
+        }
 
 
 

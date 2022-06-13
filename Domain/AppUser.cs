@@ -47,7 +47,11 @@ namespace Domain
 
         public AppUserPhoto UserPhoto { get; set; }
 
- public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
+        public virtual ICollection<UserAcctRecoveryDetail> UserAcctRecoveryDetails { get; set; } = new List<UserAcctRecoveryDetail>();
+
+
+        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
        
     }
 }

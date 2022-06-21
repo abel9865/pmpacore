@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Elsa" Version="2.8.2" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.SqlServer" Version="2.8.2" />
+    <PackageReference Include="Elsa.Activities.Http" Version="2.8.2" />
+    <PackageReference Include="Elsa.Activities.Temporal.Quartz" Version="2.8.2" />
+    <PackageReference Include="Elsa.Persistence.EntityFramework.Sqlite" Version="2.8.2" />
+    <PackageReference Include="Elsa.Server.Core" Version="2.8.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.1" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
+    <PackageReference Include="Elsa.Server.Api" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Elsa" />
+    <None Remove="Elsa.Persistence.EntityFramework.SqlServer" />
+    <None Remove="Elsa.Activities.Http" />
+    <None Remove="Elsa.Activities.Temporal.Quartz" />
+    <None Remove="Elsa.Persistence.EntityFramework.Sqlite" />
+    <None Remove="Elsa.Server.Core" />
+    <None Remove="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <None Remove="Microsoft.AspNetCore.Mvc.Versioning" />
+    <None Remove="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="NodaTime.Serialization.SystemTextJson" />
+    <None Remove="Swashbuckle.AspNetCore.Annotations" />
+    <None Remove="Swashbuckle.AspNetCore.Filters" />
+    <None Remove="Swashbuckle.AspNetCore.SwaggerGen" />
+    <None Remove="System.Text.Encodings.Web" />
+    <None Remove="Elsa.Server.Api" />
+  </ItemGroup>
+</Project>

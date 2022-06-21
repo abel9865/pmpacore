@@ -70,7 +70,7 @@ namespace API.Controllers
 
 
         [AllowAnonymous]
-        [HttpPost("ResetPassword")]
+        [HttpPost("SendPasswordEmail")]
            public async Task<ActionResult<bool>> SendResetLink(PasswordRequestDto requestObj)
            {
                if (string.IsNullOrEmpty(requestObj.Email))

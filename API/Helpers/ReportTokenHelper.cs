@@ -9,7 +9,7 @@ namespace API.Helpers
 {
     public class ReportTokenHelper
     {
-        public string GenerateToken(string userName, string password, string tkApi)
+        public string GenerateToken(string url, string userName, string password)
         {
             System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             //string userName = "guest@boldreports.com";
@@ -25,8 +25,9 @@ namespace API.Helpers
                 new KeyValuePair<string, string>("username", userName),
                 new KeyValuePair<string, string>("password", password)
                   });
-           
-                var result = client.PostAsync("http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/token", content).Result;
+
+                // var result = client.PostAsync("http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/token", content).Result;
+                var result = client.PostAsync(url, content).Result;
                 string resultContent = result.Content.ReadAsStringAsync().Result;
                 var token = JsonConvert.DeserializeObject<Token>(resultContent);
 

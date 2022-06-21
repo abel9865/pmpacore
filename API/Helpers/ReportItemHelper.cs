@@ -19,7 +19,7 @@ namespace API.Helpers
             using (var proxy = new CustomWebClient())
             {
                 proxy.Headers["Content-type"] = "application/json";
-                proxy.Headers["Authorization"] = token;
+                proxy.Headers["Authorization"] = "bearer "+token;
                     //token.token_type + " " + token.access_token; // token must be passed here
                 proxy.Encoding = Encoding.UTF8;
 

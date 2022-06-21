@@ -12,9 +12,10 @@ namespace API.Controllers
         {
             var userName = UserAccessor.GetUsername();
             var password = "Sw33tt34!";
-            var tkApi = "http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/get-user-key";
+            //var tkApi = "http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/get-user-key";
             var rptTokenHelper = new ReportTokenHelper();
-            return rptTokenHelper.GenerateToken(userName, password, tkApi);
+            var tkUrl = "http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/token";
+            return rptTokenHelper.GenerateToken(tkUrl, userName, password);
 
         }
 

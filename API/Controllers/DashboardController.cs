@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using API.Helpers;
@@ -63,12 +64,16 @@ namespace API.Controllers
         [HttpGet("GetDashboardToken")]
         public string GetDashboardToken()
         {
-            var userName = UserAccessor.GetUsername();
-            var password = "Sw33tt34!";
-            //var tkApi = "http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/get-user-key";
-            var tkUrl = "http://desktop-1mq5eqq:49987/bi/api/site/acmebi/token";
-            var rptTokenHelper = new ReportTokenHelper();
-            return rptTokenHelper.GenerateToken(tkUrl, userName, password);
+            return DashboardToken.GetDashboardToken(UserAccessor);
+
+
+            //var userName = UserAccessor.GetUsername();
+            //userName = "abel9865@gmail.com";
+            //var password = "Sw33tt34!";
+            ////var tkApi = "http://desktop-1mq5eqq:49987/reporting/api/site/acmerpt/get-user-key";
+            //var tkUrl = "http://desktop-1mq5eqq:49987/bi/api/site/acmebi/token";
+            //var rptTokenHelper = new ReportTokenHelper();
+            //return rptTokenHelper.GenerateToken(tkUrl, userName, password);
 
         }
 
@@ -109,6 +114,25 @@ namespace API.Controllers
                     }
                 }
                 return null;
+            }
+        }
+
+        [HttpPost("DeleteDashboard/{id}")]
+        public bool DeleteDashboard(string id)
+        {
+            var BoldURL = "http://desktop-1mq5eqq:49987";
+
+
+            using (var client = new HttpClient())
+            {
+
+        
+                client.BaseAddress = new Uri(BoldURL + "/bi/api/site/acmebi/v2.0/items/" + id);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetDashboardToken());
+                var result = client.DeleteAsync(new Uri(BoldURL + "/bi/api/site/acmebi/v2.0/items/" + id)).Result;
+
+                return result.IsSuccessStatusCode;
             }
         }
     }

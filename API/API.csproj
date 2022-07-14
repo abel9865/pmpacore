@@ -33,9 +33,11 @@
     <None Remove="MailKit" />
     <None Remove="MimeKit" />
     <None Remove="Helpers\DashboardHelpers\" />
+    <None Remove="Helpers\WorkFlowHelpers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SignalR\" />
     <Folder Include="Helpers\DashboardHelpers\" />
+    <Folder Include="Helpers\WorkFlowHelpers\" />
   </ItemGroup>
 </Project>
